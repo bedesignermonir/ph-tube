@@ -12,12 +12,22 @@ function categoriesLoad() {
 function categoriesShow(data) {
     data.forEach((items) => {
         const categoryDiv = document.getElementById('category');
-        const categoryButton = document.createElement('button');
-        categoryButton.innerText = items.category;
-        categoryButton.classList = "btn"
+        const categoryButton = document.createElement('div');
+        categoryButton.innerHTML = `
+        <button onclick="loadCategoryVideo(${items.category_id})" class="btn"> ${items.category} </button>
+        `
+
         categoryDiv.append(categoryButton);
 
     });
+}
+
+
+const loadCategoryVideo = (id) => {
+    fetch(`https://openapi.programming-hero.com/api/phero-tube/category/${id}`)
+        .then((res) => res.json())
+        .then((data) => videosData(data.category))
+        .catch((error) => console.error(error))
 }
 
 
@@ -51,8 +61,9 @@ function makeDateTime(seconds) {
 
 // video show on ui
 const videosData = (data) => {
+    const section = document.getElementById('video');
+    section.innerHTML = "";
     data.forEach((item) => {
-        const section = document.getElementById('video');
         const div = document.createElement('div');
         div.classList = "card bg-base-100 w-96 shadow-sm"
         div.innerHTML = `
