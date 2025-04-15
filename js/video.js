@@ -5,7 +5,7 @@ function categoriesLoad() {
         .then(data => categoriesShow(data.categories))
         .catch(error => console.error(error)
         )
-}
+};
 
 
 // Category Show on UI
@@ -20,7 +20,7 @@ function categoriesShow(data) {
         categoryDiv.append(categoryButton);
 
     });
-}
+};
 
 // function to remove button active
 const removeActiveClass = () => {
@@ -41,16 +41,16 @@ const loadCategoryVideo = (id) => {
             videosData(data.category);
         })
         .catch((error) => console.error(error))
-}
+};
 
 
 // video Fetch
-const videoLoad = () => {
-    fetch('https://openapi.programming-hero.com/api/phero-tube/videos')
+const videoLoad = (searchText = "") => {
+    fetch(`https://openapi.programming-hero.com/api/phero-tube/videos?title=${searchText}`)
         .then(res => res.json())
         .then(data => videosData(data.videos))
         .catch(error => console.error(error))
-}
+};
 
 // function to convert seconds to days and hours
 function makeDateTime(seconds) {
@@ -64,7 +64,27 @@ function makeDateTime(seconds) {
     seconds %= 60;
     return `${days} days ${hours} hours ago`;
 
-}
+};
+
+// video Details Function
+const loadDetails = async (videoID) => {
+    const uri = `https://openapi.programming-hero.com/api/phero-tube/video/${videoID}`;
+    const res = await fetch(uri);
+    const data = await res.json();
+    displayDetails(data.video);
+
+};
+
+// display Video Details
+const displayDetails = (video) => {
+
+    const displayText = document.getElementById("modalText");
+    displayText.innerHTML = `
+    <img src=${video.thumbnail}>
+    <p>${video.description}</p>
+    `
+    document.getElementById("modalData").click();
+};
 
 
 // video show on ui on Button Click
@@ -106,14 +126,17 @@ ${item.others.posted_date?.length === 0 ? "" : `<span class="absolute right-2 bo
     <p class="text-gray-400">${item.authors[0].profile_name}</p>
     ${item.authors[0].verified ? '<img class="h-5 w-5" src="https://img.icons8.com/?size=96&id=D9RtvkuOe31p&format=png" />' : ""}
     </div>
+    <p> <button onclick="loadDetails('${item.video_id}')" class="btn btn-sm btn-error">Details</button> </p>
    </div>
-   
   </div>
         `
         section.append(div)
     })
 }
 
+document.getElementById("searchInput").addEventListener("keyup", (e) => {
+    videoLoad(e.target.value);
+})
 // Function Call
 
 categoriesLoad()
