@@ -30,7 +30,7 @@ const removeActiveClass = () => {
     }
 };
 
-
+// Load Video
 const loadCategoryVideo = (id) => {
     fetch(`https://openapi.programming-hero.com/api/phero-tube/category/${id}`)
         .then((res) => res.json())
@@ -44,10 +44,6 @@ const loadCategoryVideo = (id) => {
 }
 
 
-categoriesLoad()
-
-
-
 // video Fetch
 const videoLoad = () => {
     fetch('https://openapi.programming-hero.com/api/phero-tube/videos')
@@ -57,7 +53,6 @@ const videoLoad = () => {
 }
 
 // function to convert seconds to days and hours
-
 function makeDateTime(seconds) {
     const days = parseInt(seconds / (24 * 3600));
     seconds %= 24 * 3600;
@@ -72,11 +67,11 @@ function makeDateTime(seconds) {
 }
 
 
-// video show on ui
+// video show on ui on Button Click
 const videosData = (data) => {
     const section = document.getElementById('video');
     section.innerHTML = "";
-
+    // If there is no Video then Show
     if (data.length === 0) {
         section.classList.remove("grid");
         section.innerHTML = `
@@ -101,10 +96,7 @@ const videosData = (data) => {
 ${item.others.posted_date?.length === 0 ? "" : `<span class="absolute right-2 bottom-2 bg-black text-white rounded p-1">
     ${makeDateTime(item.others.posted_date)}`
             }
-
-      
-      
-      </span>
+    </span>
   </figure>
   <div class="px-0 py-2 flex">
   <img class="w-10 h-10 rounded-full object-cover" src= ${item.authors[0].profile_picture}/>
@@ -118,15 +110,11 @@ ${item.others.posted_date?.length === 0 ? "" : `<span class="absolute right-2 bo
    
   </div>
         `
-
         section.append(div)
-
-        console.log(item)
-
-
-
     })
 }
 
+// Function Call
 
+categoriesLoad()
 videoLoad();
